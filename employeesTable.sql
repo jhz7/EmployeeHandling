@@ -1,17 +1,12 @@
 CREATE TABLE empleados (
   --
   nmempleado       int4,
-  cdempleado       varchar(15),
-  dsnombre        varchar(120),
-  feregistro      date,
-  snactivo        varchar(1),
+  cdempleado       varchar(15) NOT NULL,
+  dsnombre         varchar(120) NOT NULL,
+  feregistro       date  NOT NULL,
+  snactivo         varchar(1)  NOT NULL,
   --
-  CONSTRAINT pk_empleados PRIMARY KEY (nmempleado)
+  CONSTRAINT pk_empleados PRIMARY KEY (nmempleado),
+  CONSTRAINT ck_empleados CHECK (snactivo IN ('S', 'N'))
   --
 );
-
-insert into empleados (nmempleado, cdempleado, dsnombre, feregistro, snactivo)
-  values(1, '1127064277', 'JHON ZAMBRANO', '2018-07-03', 'S');
-
-insert into empleados (nmempleado, cdempleado, dsnombre, feregistro, snactivo)
-  values(2, '1127352583', 'YIRLENIA MALDONADO', '2018-07-03', 'S');

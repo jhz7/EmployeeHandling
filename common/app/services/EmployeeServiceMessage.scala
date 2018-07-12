@@ -26,8 +26,8 @@ object EmployeeServiceMessage {
   implicit object employeeResponseParser extends OFormat[EmployeeResponse]{
     def reads (in: JsValue):JsResult[EmployeeResponse] =
       (in \ "type").as[JsString] match {
-        case JsString("employeeSuccess") => employeeSuccessFormat.reads(in)
-        case JsString("employeeError")   => employeeErrorFormat.reads(in)
+        case JsString("EmployeeSuccess") => employeeSuccessFormat.reads(in)
+        case JsString("EmployeeError")   => employeeErrorFormat.reads(in)
         case other                       => JsError(JsPath \ "type", s"Invalid type: $other")
       }
 

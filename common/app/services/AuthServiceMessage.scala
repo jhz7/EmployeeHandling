@@ -56,8 +56,8 @@ object AuthServiceMessage {
   implicit object LogoutResponseFormat extends OFormat[LogoutResponse] {
     def reads(in: JsValue):JsResult[LogoutResponse] =
       (in \ "type").as[JsString] match {
-        case JsString("logoutSuccess") => LogoutSuccessFormat.reads(in)
-        case JsString("logoutError")   => LogoutErrorFormat.reads(in)
+        case JsString("LogoutSuccess") => LogoutSuccessFormat.reads(in)
+        case JsString("LogoutError")   => LogoutErrorFormat.reads(in)
         case other                     => JsError(JsPath \ "type", s"Invalid type: $other")
       }
 

@@ -1,0 +1,66 @@
+@import helper._
+
+@(employeeForm: Form[services.EmployeeServiceMessage.Employee])(implicit messages: Messages, req: Request[AnyContent])
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <script src="@routes.Assets.versioned("javascripts/jquery.js")"></script>
+    </head>
+    <body>
+        <div class="container separate col-lg-9 justify-content-md-center">
+            <div class="row separate">
+                <div class="col-lg-6">
+                    <h1>Edit Employee</h1>
+                </div>
+                <div class="col-lg-3 text-right">
+                    <a class="btn btn-primary" href="/logout">Logout</a>
+                </div>
+            </div>
+            @form(action= helper.CSRF(routes.SiteEmployeeController.submitUpdate)) {
+                <div class="row">
+                     <div class="col-lg-3">
+                        @inputText(
+                            employeeForm("number"),
+                            '_label -> "Id for existing employee...",
+                            'readonly -> "readonly",
+                            'class -> "form-control")
+                     </div>
+                     <div class="col-lg-3">
+                        @inputText(
+                            employeeForm("code"),
+                            '_label -> "Update document code...",
+                            'class -> "form-control")
+                     </div>
+                     <div class="col-lg-3">
+                        @inputText(
+                            employeeForm("name"),
+                            '_label -> "Update employee name...",
+                            'class -> "form-control")
+                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        @inputText(
+                            employeeForm("registryDate"),
+                            '_label -> "Update registry date...",
+                            'class -> "form-control")
+                    </div>
+                    <div class="col-lg-3">
+                        @checkbox(
+                            employeeForm("active"),
+                            '_label -> "Is active?",
+                            'class -> "form-control")
+                    </div>
+                    <div class="col-lg-3 text-right">
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
+                    <br>
+                </div>
+            }
+            <div class="col-lg-9 text-right">
+                <a class="btn btn-primary" href="/">Cancel</a>
+            </div>
+        </div>
+    </body>
+</html>

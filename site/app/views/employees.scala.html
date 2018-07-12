@@ -1,0 +1,45 @@
+@(employees: Seq[services.EmployeeServiceMessage.Employee])
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Employee Handling Site</title>
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <script src="@routes.Assets.versioned("javascripts/jquery.js")"></script>
+    </head>
+    <body>
+        <div class="container separate">
+            <div class="text-right">
+                <a class="btn btn-primary" href="/logout">Logout</a>
+            </div>
+            <h1>Employees</h1>
+            <table class="table bordered-table stripped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Legal Id</th>
+                        <th>Log Date</th>
+                        <th>Active</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(employee <- employees){
+                        <tr>
+                            <td>@employee.name</td>
+                            <td>@employee.code</td>
+                            <td>@employee.registryDate</td>
+                            <td>@if(employee.active){YES} else {NO}</td>
+                            <td><a class="btn btn-success" href="/edit/@employee.code">Edit</a></td>
+                            <td><a class="btn btn-danger" href="/delete/@employee.code">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="text-right">
+                <a class="btn btn-primary" href="/add">Add Employee</a>
+            </div>
+        </div>
+    </body>
+</html>

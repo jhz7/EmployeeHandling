@@ -1,0 +1,18 @@
+####################################################################
+## EmployeeApi microservice listen at 9002 http port on localhost ##
+####################################################################
+
+# Get all employees registered
+GET /employees/all                    controllers.EmployeeApiController.getAll
+
+# Get an employee by document
+GET /employees/:document              controllers.EmployeeApiController.get(document: String)
+
+# Add an employee
+POST /employees/add                   controllers.EmployeeApiController.add
+
+# Update an employee
+POST /employees/update                controllers.EmployeeApiController.update
+
+# Delete an employee
+DELETE /employees/:document/delete    controllers.EmployeeApiController.delete(document: String)

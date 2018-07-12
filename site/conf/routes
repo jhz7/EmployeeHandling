@@ -1,0 +1,26 @@
+###############################################################
+### Site microservice listen at 9000 http port on localhost ###
+###############################################################
+
+GET /                     controllers.SiteEmployeeController.index
+
+GET /add                  controllers.SiteEmployeeController.add
+
+GET /edit/:document       controllers.SiteEmployeeController.edit(document: String)
+
+GET /delete/:document     controllers.SiteEmployeeController.delete(document: String)
+
+POST /addEmployee         controllers.SiteEmployeeController.submitAdd
+
+POST /updateEmployee      controllers.SiteEmployeeController.submitUpdate
+
+## Routes to SiteAuthController
+
+GET /login                controllers.SiteAuthController.login
+
+GET /logout               controllers.SiteAuthController.logout
+
+POST /submitLogin         controllers.SiteAuthController.submitLogin
+
+# Assets configuration
+GET  /assets/*file        controllers.Assets.versioned(path="/public", file: Asset)

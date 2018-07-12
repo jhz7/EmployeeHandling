@@ -1,0 +1,9 @@
+####################################################################
+#### AuthApi microservice listen at 9001 http port on localhost ####
+####################################################################
+
+POST /login               controllers.AuthApiController.login
+
+GET /logout/:sessionId    controllers.AuthApiController.logout(sessionId: String)
+
+GET /whoami/:sessionId    controllers.AuthApiController.whoami(sessionId: String)

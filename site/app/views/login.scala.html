@@ -1,0 +1,37 @@
+@import helper._
+
+@(loginForm: Form[services.AuthServiceMessage.LoginRequest])(implicit message: Messages, req: Request[AnyContent])
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Handling site Login</title>
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/main.css")">
+    <script src="@routes.Assets.versioned("javascripts/jquery.js")"></script>
+</head>
+<body>
+    <div class="container separate">
+        <div class="col-md-4 justify-content-md-center">
+            <h1>Login</h1>
+            @form(action = helper.CSRF(routes.SiteAuthController.submitLogin)) {
+            <div class="col">
+              @inputText(
+                loginForm("username"),
+                '_label -> "Username...",
+                'class -> "form-control")
+            </div>
+            <div class="col">
+              @inputPassword(
+                loginForm("password"),
+                '_label -> "Password...",
+                'class -> "form-control")
+            </div>
+            <div class="col">
+              <button class="btn btn-primary" type="submit">Send</button>
+            </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

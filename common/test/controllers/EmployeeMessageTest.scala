@@ -18,7 +18,7 @@ class EmployeeMessageTest extends PlaySpec with MustMatchers{
     */
   "EmployeeFormatWrite" must {
     "parse from scala object to JSON" in {
-      val employee = new Employee(Some(1), "1127064277", "Jhon Zambrano", "2018-07-04", true)
+      val employee = new Employee(1, "1127064277", "Jhon Zambrano", "2018-07-04", true)
       val jsonObj = Json.obj(
         "number" -> 1,
         "code" -> "1127064277",
@@ -36,7 +36,7 @@ class EmployeeMessageTest extends PlaySpec with MustMatchers{
     */
   "EmployeeFormatRead" must {
     "parse from JSON to scala object" in {
-      val employee = new Employee(Some(1), "1127064277", "Jhon Zambrano", "2018-07-04", true)
+      val employee = new Employee(1, "1127064277", "Jhon Zambrano", "2018-07-04", true)
       val jsonObj = Json.obj(
         "number" -> 1,
         "code" -> "1127064277",
@@ -54,8 +54,8 @@ class EmployeeMessageTest extends PlaySpec with MustMatchers{
     */
   "EmployeeSuccessFormatWrite" must {
     "parse from scala object to JSON" in {
-      val employee1 = new Employee(Some(1), "1127064277", "Jhon Zambrano", "2018-07-04", true)
-      val employee2 = new Employee(Some(2), "1127064277", "Jhon Zambrano", "2018-07-04", true)
+      val employee1 = new Employee(1, "1127064277", "Jhon Zambrano", "2018-07-04", true)
+      val employee2 = new Employee(2, "1127064277", "Jhon Zambrano", "2018-07-04", true)
 
       val employees = new EmployeeSuccess(Seq(employee1, employee2))
 
@@ -76,7 +76,7 @@ class EmployeeMessageTest extends PlaySpec with MustMatchers{
             "active" -> true
           )
         ),
-        "type" -> "employeeSuccess"
+        "type" -> "EmployeeSuccess"
       )
 
 
@@ -89,8 +89,8 @@ class EmployeeMessageTest extends PlaySpec with MustMatchers{
     */
   "EmployeeSuccessFormatRead" must {
     "parse from JSON to scala object" in {
-      val employee1 = new Employee(Some(1), "1127064277", "Jhon Zambrano", "2018-07-04", true)
-      val employee2 = new Employee(Some(2), "1127064277", "Jhon Zambrano", "2018-07-04", true)
+      val employee1 = new Employee(1, "1127064277", "Jhon Zambrano", "2018-07-04", true)
+      val employee2 = new Employee(2, "1127064277", "Jhon Zambrano", "2018-07-04", true)
 
       val employees = new EmployeeSuccess(Seq(employee1, employee2))
 
@@ -111,7 +111,7 @@ class EmployeeMessageTest extends PlaySpec with MustMatchers{
             "active" -> true
           )
         ),
-        "type" -> "employeeSuccess"
+        "type" -> "EmployeeSuccess"
       )
 
       Json.fromJson[EmployeeResponse](jsonObj).asOpt mustEqual(Some(employees))
@@ -123,11 +123,11 @@ class EmployeeMessageTest extends PlaySpec with MustMatchers{
     */
   "EmployeeErrorFormatWrite" must {
     "parse from scala object to JSON" in {
-      val employee = new EmployeeError("1127064277")
+      val employee = new EmployeeError("Fail")
 
       val jsonObj = Json.obj(
-        "document" -> "1127064277",
-        "type" -> "employeeError"
+        "message" -> "Fail",
+        "type" -> "EmployeeError"
       )
 
       Json.toJson(employee) mustEqual(jsonObj)
@@ -139,11 +139,11 @@ class EmployeeMessageTest extends PlaySpec with MustMatchers{
     */
   "EmployeeErrorFormatRead" must {
     "parse from JSON to scala object" in {
-      val employee = new EmployeeError("1127064277")
+      val employee = new EmployeeError("Fail")
 
       val jsonObj = Json.obj(
-        "document" -> "1127064277",
-        "type" -> "employeeError"
+        "message" -> "Fail",
+        "type" -> "EmployeeError"
       )
 
       Json.fromJson[EmployeeResponse](jsonObj).asOpt mustEqual(Some(employee))

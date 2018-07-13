@@ -22,7 +22,7 @@ lazy val employeeApi = project.in(file("./employeeApi")).
   dependsOn(common).
   enablePlugins(PlayScala)
 
-scalaVersion := "2.12.6"
+scalaVersion in employeeApi := "2.12.6"
 
 libraryDependencies in employeeApi += "com.typesafe.play" %% "play-jdbc" % "2.6.15"
 libraryDependencies in employeeApi += "org.postgresql" % "postgresql" % "42.2.2"

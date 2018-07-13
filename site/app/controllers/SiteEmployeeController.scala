@@ -1,6 +1,6 @@
 package controllers
 
-import clients.{AuthServiceClient, EmployeeServiceClient}
+import clients.EmployeeServiceClient
 import javax.inject.Inject
 import play.api.data._
 import play.api.data.Forms._
@@ -18,8 +18,7 @@ import services.AuthServiceMessage._
   * @param localExecutionContext Default Play Thread pool
   * @param controllerComponents Components for baseController
   */
-class SiteEmployeeController @Inject()(authClient: AuthServiceClient,
-                                       employeeClient: EmployeeServiceClient,
+class SiteEmployeeController @Inject()(employeeClient: EmployeeServiceClient,
                                        implicit val localExecutionContext: ExecutionContext,
                                        val controllerComponents: ControllerComponents)
   extends BaseController with play.api.i18n.I18nSupport with SiteControllerHelper

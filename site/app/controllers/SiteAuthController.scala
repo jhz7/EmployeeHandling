@@ -52,10 +52,10 @@ class SiteAuthController @Inject() (authClient: AuthServiceClient,
   def logout: Action[AnyContent] = Action.async(parse.anyContent) { implicit req =>
     req.sessionCookieId match {
       case Some(sessionId) => authClient.logout(sessionId) map {
-        case rsp: LogoutSuccess => Redirect(routes.SiteAuthController.login())
-        case rsp: LogoutError   => Redirect(routes.SiteEmployeeController.index())
+        case rsp: LogoutSuccess => redirectToLogin
+        case rsp: LogoutError   => redirectToIndex
       }
-      case None           => Future.successful(Redirect(routes.SiteAuthController.login()))
+      case None            => Future.successful(redirectToLogin)
     }
   }
 
@@ -72,10 +72,17 @@ class SiteAuthController @Inject() (authClient: AuthServiceClient,
       },
       success = { loginReq =>
         authClient.login(loginReq) map {
-          case res: LoginSuccess => Redirect(routes.SiteEmployeeController.index()).withSessionCookie(res.sessionId)
+          case res: LoginSuccess => redirectToIndex.withSessionCookie(res.sessionId)
           case _ => BadRequest(views.html.login(loginForm.withError("username", "User not found or password incorrect")))
         }
       }
     )
   }
+
+  // Helpers to redirect
+  private val redirectToLogin: Result =
+    Redirect(routes.SiteAuthController.login())
+
+  private val redirectToIndex: Result =
+    Redirect(routes.SiteEmployeeController.index())
 }

@@ -126,7 +126,7 @@ case class EmployeeApiService(db: Database) {
   private def fetchData(sql: String, statement: Statement)(f: ResultSet => EmployeeResponse): EmployeeResponse = {
     statement.executeQuery(sql) match {
       case rsp: ResultSet => f(rsp)
-      case other          => EmployeeError("Fail to execute query!")
+      case _              => EmployeeError("Fail to execute query!")
     }
   }
 

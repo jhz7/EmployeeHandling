@@ -44,11 +44,9 @@ class SiteEmployeeController @Inject()(employeeClient: EmployeeServiceClient,
   def index: Action[AnyContent] = Action.async(parse.anyContent) {
     implicit req =>
       withSessionCookieId(req){ sessionId =>
-        employeeClient.getAllEmployees(sessionId).map {
-          case EmployeeSuccess(employees) => Ok(views.html.employees(employees))
-          case EmployeeError(msg) if msg == SESSION_ID_NOT_FOUND => redirectToLogin
-          case EmployeeError(msg) => NotFound(msg)
-        }
+        employeeClient.getAllEmployees(sessionId) map withEmployeeResponse{
+            employees => Ok(views.html.employees(employees))
+          }
       }
   }
 
@@ -62,11 +60,9 @@ class SiteEmployeeController @Inject()(employeeClient: EmployeeServiceClient,
   def edit(document: String): Action[AnyContent] = Action.async(parse.anyContent) {
     implicit req =>
       withSessionCookieId(req) { sessionId =>
-        employeeClient.getEmployee(sessionId, document) map {
-          case EmployeeSuccess(employees) => Ok(views.html.edit(employeeForm.fill(employees.head)))
-          case EmployeeError(msg) if msg == SESSION_ID_NOT_FOUND => redirectToLogin
-          case EmployeeError(msg) => NotFound(msg)
-        }
+        employeeClient.getEmployee(sessionId, document) map withEmployeeResponse{
+            employees => Ok(views.html.edit(employeeForm.fill(employees.head)))
+          }
       }
   }
 
@@ -96,11 +92,9 @@ class SiteEmployeeController @Inject()(employeeClient: EmployeeServiceClient,
             Future.successful(Ok(views.html.edit(badEmployeeForm)))
           },
           success = { employee: Employee =>
-            employeeClient.updateEmployee(sessionId, employee) map {
-              case res: EmployeeSuccess => redirectToIndex
-              case EmployeeError(msg) if msg == SESSION_ID_NOT_FOUND => redirectToLogin
-              case EmployeeError(msg) => NotFound(msg)
-            }
+            employeeClient.updateEmployee(sessionId, employee) map withEmployeeResponse{
+                employees => redirectToIndex
+              }
           }
         )
       }
@@ -120,11 +114,9 @@ class SiteEmployeeController @Inject()(employeeClient: EmployeeServiceClient,
             Future.successful(Ok(views.html.add(badEmployeeForm)))
           },
           success = { employee =>
-            employeeClient.addEmployee(sessionId, employee) map {
-              case res: EmployeeSuccess => redirectToIndex
-              case EmployeeError(msg) if msg == SESSION_ID_NOT_FOUND => redirectToLogin
-              case EmployeeError(msg) => NotFound(msg)
-            }
+            employeeClient.addEmployee(sessionId, employee) map withEmployeeResponse{
+                employees => redirectToIndex
+              }
           }
         )
       }
@@ -176,4 +168,17 @@ class SiteEmployeeController @Inject()(employeeClient: EmployeeServiceClient,
       case Some(sessionId) => func(sessionId)
       case None            => Future.successful(redirectToLogin)
     }
+
+  /**
+    * Method: withEmployeeResponse <br>
+    * Description: Private utility to refactor code inside actions <br>
+    * Date: 2018/07/14 <br>
+    * @param func function that yields a result object
+    * @return
+    */
+  private def withEmployeeResponse(func: Seq[Employee] => Result): EmployeeResponse => Result = {
+    case EmployeeSuccess(employees)                        => func(employees)
+    case EmployeeError(msg) if msg == SESSION_ID_NOT_FOUND => redirectToLogin
+    case EmployeeError(msg)                                => NotFound(msg)
+  }
 }

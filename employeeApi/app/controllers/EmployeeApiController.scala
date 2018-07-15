@@ -80,7 +80,6 @@ class EmployeeApiController @Inject()(@NamedDatabase("develop") db: Database,
           case JsSuccess(employee, _) =>
             employeeService.update(employee) map { employeeResponse =>
               Ok(Json.toJson[EmployeeResponse](employeeResponse))
-
           }
           case err: JsError => Future.successful(BadRequest(ErrorJson(err)))
         }
@@ -98,14 +97,14 @@ class EmployeeApiController @Inject()(@NamedDatabase("develop") db: Database,
     */
   def add: Action[AnyContent]= Action.async(parse.anyContent) { req =>
     withAuthenticatedUser(req) flatMap {
-      case rsp: Credentials => req.jsonAs[Employee] match {
-        case JsSuccess(employee, _) =>
-          employeeService.add(employee) map { employeeResponse =>
-            Ok(Json.toJson[EmployeeResponse](employeeResponse))
-
+      case rsp: Credentials =>
+        req.jsonAs[Employee] match {
+          case JsSuccess(employee, _) =>
+            employeeService.add(employee) map { employeeResponse =>
+              Ok(Json.toJson[EmployeeResponse](employeeResponse))
+          }
+          case err: JsError => Future.successful(BadRequest(ErrorJson(err)))
         }
-        case err: JsError => Future.successful(BadRequest(ErrorJson(err)))
-      }
       case _ => Future.successful(
         Ok(Json.toJson[EmployeeResponse](EmployeeError(SESSION_ID_NOT_FOUND)))
       )

@@ -16,14 +16,14 @@ case class AuthApiService (db: Database) {
 
   import services.AuthServiceMessage._
 
-  // Stores all active sessions
+  /** Stores all active sessions in memory */
   private var sessions = Map[SessionId, Username]()
 
-  // Thread pool for handle the data base tasks
+  /** Thread pool to handle data base tasks */
   private val dispatcher: ExecutionContext =
     ActorSystem().
       dispatchers.
-      lookup("play.akka.actor.database.develop.dispatcher")
+      lookup(id = "play.akka.actor.database.develop.dispatcher")
 
   /**
     * Method: login <br>
@@ -34,21 +34,20 @@ case class AuthApiService (db: Database) {
     */
   def login(loginRequest: LoginRequest): Future[LoginResponse] = Future {
     db.withConnection[LoginResponse](false) { connection =>
-        val query = "SELECT contrasenia FROM usuarios WHERE nombre = '" + loginRequest.username + "'"
-        val statement = connection.createStatement()
-        val resultSet = statement.executeQuery(query)
-
-        if (!resultSet.next()) {
-          UserNotFound(loginRequest.username)
+      val query = "SELECT contrasenia FROM usuarios WHERE nombre = '" + loginRequest.username + "'"
+      val statement = connection.createStatement()
+      val resultSet = statement.executeQuery(query)
+      if (!resultSet.next()) {
+        UserNotFound(loginRequest.username)
+      } else {
+        if (loginRequest.password == resultSet.getString("contrasenia")) {
+          val sessionId = generateSessionId
+          sessions += (sessionId -> loginRequest.username)
+          LoginSuccess(sessionId)
         } else {
-          if (loginRequest.password == resultSet.getString("contrasenia")) {
-            val sessionId = generateSessionId
-            sessions += (sessionId -> loginRequest.username)
-            LoginSuccess(sessionId)
-          } else {
-            PasswordIncorrect(loginRequest.username)
-          }
+          PasswordIncorrect(loginRequest.username)
         }
+      }
     }
   }(dispatcher)
 
@@ -76,7 +75,7 @@ case class AuthApiService (db: Database) {
 
   /**
     * Method: generateSessionId <br>
-    * Description: Generates a random sessionId<br>
+    * Description: Generates a randomly sessionId<br>
     * Date: 2018/07/10 <br>
     * @return sessionId
     */

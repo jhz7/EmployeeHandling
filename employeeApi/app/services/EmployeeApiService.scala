@@ -16,11 +16,11 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 case class EmployeeApiService(db: Database) {
 
-  // Thread pool for handle the data base tasks
+  /** Thread pool to handle data base tasks */
   private val dispatcher: ExecutionContext =
     ActorSystem().
     dispatchers.
-    lookup("play.akka.actor.database.develop.dispatcher")
+    lookup(id = "play.akka.actor.database.develop.dispatcher")
 
   /**
     * Method: allEmployees <br>
@@ -32,13 +32,13 @@ case class EmployeeApiService(db: Database) {
     db.withConnection[EmployeeResponse](false){ connection =>
       val query = "SELECT * FROM empleados ORDER BY dsnombre"
       val statement: Statement = connection.createStatement()
-      fetchData(query, statement)(setEmployeeResponse)
+      fetchData(query, statement)
     }
   }(dispatcher)
 
   /**
     * Method: employee <br>
-    * Description: Get one employee from data base by its document <br>
+    * Description: Get one employee from data base by his document <br>
     * Date: 2018/07/05 <br>
     * @param document Employee legalId
     * @return Future[EmployeeResponse]
@@ -47,7 +47,7 @@ case class EmployeeApiService(db: Database) {
     db.withConnection[EmployeeResponse](false) { connection =>
       val query = s"SELECT * FROM empleados where cdempleado LIKE '$document' LIMIT 1"
       val statement: Statement = connection.createStatement()
-      fetchData(query, statement)(setEmployeeResponse)
+      fetchData(query, statement)
     }
   }(dispatcher)
 
@@ -116,30 +116,16 @@ case class EmployeeApiService(db: Database) {
 
   /**
     * Method: fetchData <br>
-    * Description: <br>
+    * Description: Set employee response from data base. <br>
     * Date: 2018/07/05 <br>
     * @param sql query
     * @param statement to execute
-    * @param f function that performs an EmployeeResponse
     * @return EmployeeResponse
     */
-  private def fetchData(sql: String, statement: Statement)(f: ResultSet => EmployeeResponse): EmployeeResponse = {
-    statement.executeQuery(sql) match {
-      case rsp: ResultSet => f(rsp)
-      case _              => EmployeeError("Fail to execute query!")
-    }
-  }
-
-  /**
-    * Method: setEmployeeResponse <br>
-    * Description: Fills EmployeeResponse from data base ResultSet<br>
-    * Date: 2018/07/05 <br>
-    * @param resultSet incoming from data base
-    * @return EmployeeResponse
-    */
-  private def setEmployeeResponse(resultSet: ResultSet): EmployeeResponse = {
+  private def fetchData(sql: String, statement: Statement): EmployeeResponse = {
+    val resultSet = statement.executeQuery(sql)
     if(!resultSet.next()){
-      EmployeeError("No employees found!")
+      EmployeeError("No employee found!")
     }else{
       var employees = Seq[Employee]()
       do{
@@ -149,9 +135,9 @@ case class EmployeeApiService(db: Database) {
           resultSet.getString("dsnombre"),
           resultSet.getString("feregistro"),
           resultSet.getString("snactivo") match {
-                                                      case "S" => true
-                                                      case _   => false
-                                                    }
+            case "S" => true
+            case _   => false
+          }
         )
       }while(resultSet.next())
       EmployeeSuccess(employees)

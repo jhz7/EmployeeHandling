@@ -30,7 +30,7 @@ class AuthServiceClient @Inject() (ws: WSClient)(implicit val ec: ExecutionConte
     * Method: login <br>
     * Description: Calls rest web service to send login parameters <br>
     * Date: 2018/07/190 <br>
-    * @param req Request login parameters
+    * @param req login parameters
     * @return Future[LoginResponse]
     */
   def login(req: LoginRequest): Future[LoginResponse] =

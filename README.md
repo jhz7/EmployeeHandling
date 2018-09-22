@@ -1,10 +1,10 @@
 # EmployeeHandling
-Employee handling application in scala play 
+Employee handling demo application in scala play 
 
 # Settings
 
 * Create the sql tables on your preferred data base, using employeesTable.sql and usersTable.sql scripts.
-* Set the data base connection parameters in the application.conf file inside "common/conf" folder.
+* For your preferred data base, change the actual connection parameters in the application.conf file inside "common/conf" folder.
 * Set the JDBC dependency for your data base in the build.sbt file.
 
 # To Run
